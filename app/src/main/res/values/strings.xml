@@ -1,0 +1,78 @@
+<resources>
+    <string name="app_name">NortifyToAtomLiteLight</string>
+    <string name="action_settings">Settings</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">Fragment View Log</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+    <string name="start_service">全ログ表示</string>
+    <string name="update_log">ログ更新</string>
+    <string name="delete_log_data">ログデータ削除</string>
+    <string name="button_BLE_Scan_Start">BLE ScanStart</string>
+    <string name="button_BLE_Scan_Stop">BLE ScanStop</string>
+    <string name="button_BLE_Pearling_Start">BLE PearlingStart</string>
+    <string name="button_BLE_Connect_Start">BLE ConnectStart</string>
+    <string name="button_BLE_Connect_Stop">BLE ConnectStop</string>
+    <string name="button_BLE_Connect_Calling">着信中</string>
+    <string name="button_BLE_Connect_Called">着信あり</string>
+    <string name="button_BLE_Connect_Attention">通知あり</string>
+    <string name="button_start_service">電話受け待ち開始</string>
+    <string name="button_stop_service">電話受け待ち終了</string>
+    <string name="message_Gatt_Close">GattServerから切断しました</string>
+    <string name="message_Gatt_disconnect">GattServerに接続していません</string>
+    <string name="message_Gatt_Passive_Timeout">GattServerが受信Timeoutしました(もしくは切断されています)</string>
+    <string name="message_Gatt_Connection_Status_Change">GattServerのステータスが変更されました：</string>
+    <string name="status_GattConnection_STATE_CONNECTED">サーバー接続</string>
+    <string name="status_GattConnection_STATE_CONNECTING">サーバー接続中</string>
+    <string name="status_GattConnection_STATE_DISCONNECTED">サーバー切断</string>
+    <string name="status_GattConnection_STATE_DISCONNECTING">サーバー切断中</string>
+    <string name="status_Bluetooth_Not_Setting_Bluetooth_Device_Name">"Bluetoothデバイス名が設定されていません",</string>
+    <string name="status_Bluetooth_Not_Use_Bluetooth_Device">"Bluetoothデバイスがありません",</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="ble_supported">Bluetooth OK!!!</string>
+    <string name="ble_not_supported">Bluetooth Not OK !!!</string>
+
+    <string name="Service_Title">NotifyCalledToAtomLiteLight</string>
+    <string name="Service_Text">電話待ち受け中・・・</string>
+    <string name="Notify_Title">Serviceの状態変更</string>
+    <string name="Notify_Content_Button_1">Serviceの開始</string>
+    <string name="Notify_Content_Text_1">Service実行中</string>
+    <string name="Notify_Content_Button_2">Serviceの終了</string>
+    <string name="Notify_Content_Text_2">Service停止中</string>
+
+
+    <string name="second_fragment_textBox_initValue">山路を登りながら、こう考えた。
+　智に働けば角が立つ。情に棹させば流される。意地を通せば窮屈だ。とかくに人の世は住みにくい。
+　住みにくさが高じると、安い所へ引き越したくなる。どこへ越しても住みにくいと悟った時、詩が生れて、画が出来る。
+　人の世を作ったものは神でもなければ鬼でもない。やはり向う三軒両隣りにちらちらするただの人である。ただの人が作った人の世が住みにくいからとて、越す国はあるまい。あれば人でなしの国へ行くばかりだ。人でなしの国は人の世よりもなお住みにくかろう。
+　越す事のならぬ世が住みにくければ、住みにくい所をどれほどか、寛容て、束の間の命を、束の間でも住みよくせねばならぬ。ここに詩人という天職が出来て、ここに画家という使命が降る。あらゆる芸術の士は人の世を長閑にし、人の心を豊かにするが故に尊とい。
+　住みにくき世から、住みにくき煩いを引き抜いて、ありがたい世界をまのあたりに写すのが詩である、画である。あるは音楽と彫刻である。こまかに云えば写さないでもよい。ただまのあたりに見れば、そこに詩も生き、歌も湧く。着想を紙に落さぬとも※(「王＋膠のつくり」、第3水準1-88-22)鏘の音は胸裏に起る。丹青は画架に向って塗抹せんでも五彩の絢爛は自から心眼に映る。ただおのが住む世を、かく観じ得て、霊台方寸のカメラに澆季溷濁の俗界を清くうららかに収め得れば足る。この故に無声の詩人には一句なく、無色の画家には尺※(「糸＋賺のつくり」、第3水準1-90-17)なきも、かく人世を観じ得るの点において、かく煩悩を解脱するの点において、かく清浄界に出入し得るの点において、またこの不同不二の乾坤を建立し得るの点において、我利私慾の覊絆を掃蕩するの点において、――千金の子よりも、万乗の君よりも、あらゆる俗界の寵児よりも幸福である。
+    世に住むこと二十年にして、住むに甲斐ある世と知った。二十五年にして明暗は表裏のごとく、日のあたる所にはきっと影がさすと悟った。三十の今日はこう思うている。――喜びの深きとき憂いよいよ深く、楽みの大いなるほど苦しみも大きい。これを切り放そうとすると身が持てぬ。片づけようとすれば世が立たぬ。金は大事だ、大事なものが殖えれば寝る間も心配だろう。恋はうれしい、嬉しい恋が積もれば、恋をせぬ昔がかえって恋しかろ。閣僚の肩は数百万人の足を支えている。背中には重い天下がおぶさっている。うまい物も食わねば惜しい。少し食えば飽き足らぬ。存分食えばあとが不愉快だ。……
+　余の考がここまで漂流して来た時に、余の右足は突然坐りのわるい角石の端を踏み損くなった。平衡を保つために、すわやと前に飛び出した左足が、仕損じの埋め合せをすると共に、余の腰は具合よく方三尺ほどな岩の上に卸りた。肩にかけた絵の具箱が腋の下から躍り出しただけで、幸いと何の事もなかった。
+　立ち上がる時に向うを見ると、路から左の方にバケツを伏せたような峰が聳えている。杉か檜か分からないが根元から頂きまでことごとく蒼黒い中に、山桜が薄赤くだんだらに棚引いて、続ぎ目が確と見えぬくらい靄が濃い。少し手前に禿山が一つ、群をぬきんでて眉に逼る。禿げた側面は巨人の斧で削り去ったか、鋭どき平面をやけに谷の底に埋めている。天辺に一本見えるのは赤松だろう。枝の間の空さえ判然している。行く手は二丁ほどで切れているが、高い所から赤い毛布が動いて来るのを見ると、登ればあすこへ出るのだろう。路はすこぶる難義だ。
+　土をならすだけならさほど手間も入るまいが、土の中には大きな石がある。土は平らにしても石は平らにならぬ。石は切り砕いても、岩は始末がつかぬ。掘崩した土の上に悠然と峙って、吾らのために道を譲る景色はない。向うで聞かぬ上は乗り越すか、廻らなければならん。巌のない所でさえ歩るきよくはない。左右が高くって、中心が窪んで、まるで一間幅を三角に穿って、その頂点が真中を貫いていると評してもよい。路を行くと云わんより川底を渉ると云う方が適当だ。固より急ぐ旅でないから、ぶらぶらと七曲りへかかる。
+　たちまち足の下で雲雀の声がし出した。谷を見下したが、どこで鳴いてるか影も形も見えぬ。ただ声だけが明らかに聞える。せっせと忙しく、絶間なく鳴いている。方幾里の空気が一面に蚤に刺されていたたまれないような気がする。あの鳥の鳴く音には瞬時の余裕もない。のどかな春の日を鳴き尽くし、鳴きあかし、また鳴き暮らさなければ気が済まんと見える。その上どこまでも登って行く、いつまでも登って行く。雲雀はきっと雲の中で死ぬに相違ない。登り詰めた揚句は、流れて雲に入って、漂うているうちに形は消えてなくなって、ただ声だけが空の裡に残るのかも知れない。
+　巌角を鋭どく廻って、按摩なら真逆様に落つるところを、際どく右へ切れて、横に見下すと、菜の花が一面に見える。雲雀はあすこへ落ちるのかと思った。いいや、あの黄金の原から飛び上がってくるのかと思った。次には落ちる雲雀と、上る雲雀が十文字にすれ違うのかと思った。最後に、落ちる時も、上る時も、また十文字に擦れ違うときにも元気よく鳴きつづけるだろうと思った</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+
+    <!-- Preference Titles -->
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+
+    <!-- Messages Preferences -->
+    <string name="setting_title">Bluetooth設定</string>
+    <string name="signature_title">ユーザー名</string>
+    <string name="bluetooth_device_address_title">Bluetoothデバイスアドレス</string>
+    <string name="bluetooth_device_name_title">ペアリングデバイス名</string>
+    <string name="reply_title">Default reply action</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    </string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+</resources>

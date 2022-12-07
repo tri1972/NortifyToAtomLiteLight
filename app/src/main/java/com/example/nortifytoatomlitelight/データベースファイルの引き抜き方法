@@ -1,0 +1,67 @@
+#【DBファイルの確認】
+# 端末にアクセス
+→画面下部のTerminalより実行
+
+C:\Users\hoge>adb shell
+
+# 確認したいアプリのに権限付きでアクセス
+# 自アプリのパッケージ名はAndroidManifestやgradleで確認できます
+
+もしくは以下のコマンドを実行
+pm list package
+
+このプロジェクトではアプリパッケージ名は以下のものとなります
+com.tritri.thermosherpaforandroid
+
+
+
+device:/ $ run-as アプリパッケージ名
+# databasesに移動
+device:/data/data/アプリパッケージ名 $ cd databases
+# databases内のファイルを一覧確認
+device:/data/data/アプリパッケージ名 $ ls -l
+#ここで保存したDB名のファイル、もしくはDB名.dbがあればOK
+HogeDB HogeDB.db
+
+
+#【DBファイルを共有エリアにコピー】
+# 権限付きアクセスから抜ける
+device:/data/data/アプリパッケージ名 $ exit
+# 共有エリア(ここでは/sdcard/Download直下にしたが任意)にDBファイルをコピー
+device:/ $ run-as アプリパッケージ名 cp databases/HogeDB.db /sdcard/Download/HogeDB.db
+
+
+#【共有エリアからPCにDBファイルをコピー】
+# 端末にアクセスから抜ける
+device:/ $ exit
+# PCの任意の場所にコピー(ここではデスクトップへ)
+C:\Users\hoge> adb pull /sdcard/Download/HogeDB.db C:\Users\hoge\Desktop
+
+
+
+次の順番でコンソールからコマンドを実行すれば、dbファイルが取得できます
+adb shell
+run-as com.example.nortifytoatomlitelight cp databases/NortyfyToBluetooth.db /sdcard/Download/NortyfyToBluetooth.db
+(
+ここでPermission Deniedとなるなら、次のコマンドを実行
+adb shell "run-as パッケージ名 chmod 755 /data/data/パッケージ名"
+ただし、次にrun-asが実行できなくなる
+)
+exit
+adb pull /sdcard/Download/NortyfyToBluetooth.db ./
+
+SQLのコマンドで操作したい場合
+adb shell
+run-as com.example.nortifytoatomlitelight
+cd databases/
+sqlite3 NortyfyToBluetooth.db
+
+テーブルを削除する場合
+DROP TABLE ThermoSherpa;
+
+テーブル一覧を表示する場合
+select name from sqlite_master where type='table';
+
+
+
+

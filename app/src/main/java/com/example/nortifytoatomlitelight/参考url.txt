@@ -1,0 +1,50 @@
+端末起動と同時にアプリケーションを起動させる
+https://monoist.itmedia.co.jp/mn/articles/1202/20/news001.html
+
+Android 12 の新しい Bluetooth 権限
+https://developer.android.com/about/versions/12/features/bluetooth-permissions?hl=ja
+
+Androidの実行時パーミッションチェックを実装する
+https://qiita.com/niusounds/items/f8852534bd3135d89dcc
+
+ScanCallback
+https://developer.android.com/reference/android/bluetooth/le/ScanCallback.html#SCAN_FAILED_ALREADY_STARTED
+
+Android Bluetooth Low Energy
+https://qiita.com/sacred-sanctuary/items/b710d9bf37d0cd362648#bluetooth-low-energyble%E3%81%AE%E5%8F%82%E8%80%83%E3%82%B3%E3%83%BC%E3%83%89
+
+Android 5.0におけるBLE について – 受信編 –
+https://recruit.gmo.jp/engineer/jisedai/blog/android5-scan-ble/
+
+[Android] Service の使い方
+https://akira-watson.com/android/service.html
+
+TextViewの任意の位置にスクロールさせる
+https://androyer.blogspot.com/2012/03/textview.html
+
+[Android] TableLayout 意外とうまくできないマス目配置
+https://akira-watson.com/android/tablelayout.html#1
+
+Androidのconstraint layoutで、画面横サイズ何パーセントのビューに対して最大横幅を指定したいとき
+https://your3i.hatenablog.jp/entry/2018/11/24/190813
+
+BluetoothのNotifyについて
+https://www.hiramine.com/programming/blecommunicator/05_characteristic_changed_notification.html
+
+ForeGroundServiceの作り方について
+https://dev.classmethod.jp/articles/android-use-foreground-service-for-location-background/
+
+インテントとインテント フィルタ
+https://developer.android.com/guide/components/intents-filters?hl=ja#PendingIntent
+
+Androidアプリで通知にボタンを追加して、タップ時にForeground Serviceを停止する
+https://dev.classmethod.jp/articles/android-notification-action-stop-foreground-service/
+
+Notificationのなんとなく使っているけど正確な意味がよく分からない部分を調べてみた
+https://qiita.com/ryo_mm2d/items/77cf4e6da7add219c75c
+
+Serviceから任意のActivityを終了させたいのです。
+https://groups.google.com/g/android-group-japan/c/bLkEWtJtkZY
+
+【Android/Kotlin】Activityに戻るボタンを表示する
+https://suzutaka-programming.com/android_kotlin_setdisplayhomeasupenabled/
