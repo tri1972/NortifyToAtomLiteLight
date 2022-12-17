@@ -1,15 +1,13 @@
-package com.example.nortifytoatomlitelight;
+package com.example.nortifytoatomlitelight.PhoneHelper;
 
 import android.content.BroadcastReceiver;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
-import android.os.Bundle;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
-import android.widget.Toast;
+
+import com.example.nortifytoatomlitelight.PhoneHelper.MyPhoneStateListener;
 
 /**
  * 参考url

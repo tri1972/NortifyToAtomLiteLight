@@ -13,12 +13,11 @@ import android.util.Log;
 
 import com.example.nortifytoatomlitelight.BleHelper.BleConnectionAtomLiteLight;
 import com.example.nortifytoatomlitelight.BleHelper.IBleHelper;
+import com.example.nortifytoatomlitelight.PhoneHelper.PhoneCallReceiver;
 
 import java.util.List;
 
 import androidx.annotation.Nullable;
-
-import static androidx.constraintlayout.motion.utils.Oscillator.TAG;
 
 public class NotifyToAtomLiteLightService  extends Service implements IBleHelper {
     public static final String EXTRA_DATA="com.example.nortifytoatomlitelight.NotifyToAtomLiteLightService.DATA";
@@ -88,7 +87,7 @@ public class NotifyToAtomLiteLightService  extends Service implements IBleHelper
         if(currentServiceStatus== StatusNotifyToAtomLiteLightService.stopped) {//二重実行を防ぐ
             currentServiceStatus= StatusNotifyToAtomLiteLightService.running;
             //BLE接続開始
-            if(BleConnectionAtomLiteLight.ConnectStart(this.mContext, this)) {
+            if(new BleConnectionAtomLiteLight().ConnectStart(this.mContext, this)) {
                 currentServiceStatus= StatusNotifyToAtomLiteLightService.running;
                 this.mThread = new Thread(this.mTarget) {
                     @Override
@@ -127,7 +126,7 @@ public class NotifyToAtomLiteLightService  extends Service implements IBleHelper
     public void onDestroy() {
         super.onDestroy();
 
-        BleConnectionAtomLiteLight.ConnectStop(mContext);
+        new BleConnectionAtomLiteLight().ConnectStop(mContext);
         unregisterReceiver(this.mReceiver);//ここでReceiverを終了させないとandroid.app.intentreceiverleakedが発生する
         try {
             synchronized (this.mThread){

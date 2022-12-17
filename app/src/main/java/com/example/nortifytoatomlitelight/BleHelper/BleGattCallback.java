@@ -43,6 +43,8 @@ public class BleGattCallback  extends BluetoothGattCallback {
         mGetConnectionChangeStateAction.accept(newState);
         if (newState == BluetoothProfile.STATE_CONNECTED) {
             gatt.discoverServices();
+        }else if(newState== BluetoothProfile.STATE_DISCONNECTED){
+
         }
     }
 

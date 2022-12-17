@@ -1,4 +1,4 @@
-package com.example.nortifytoatomlitelight;
+package com.example.nortifytoatomlitelight.PhoneHelper;
 
 
 import android.bluetooth.BluetoothGattCharacteristic;

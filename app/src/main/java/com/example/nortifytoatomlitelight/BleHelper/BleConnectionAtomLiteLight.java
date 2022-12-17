@@ -62,7 +62,7 @@ public class BleConnectionAtomLiteLight{
      * @param statusId
      * @return
      */
-    public static String GetGattConnectionStatusToString(Context con,Integer statusId){
+    public String GetGattConnectionStatusToString(Context con,Integer statusId){
         String output=null;
         switch (statusId){
             case BluetoothProfile.STATE_CONNECTED:
@@ -83,19 +83,39 @@ public class BleConnectionAtomLiteLight{
     }
 
 
+    /**
+     * 接続先のAtomLiteの状態
+     */
+    public enum  TypeStatusAtomLiteBLE{
+        Connected,
+        DisConnected,
+        Calling,
+        Called,
+        Attention,
+        Reset,
+    }
+
+    /**
+     * AtomLiteの状態を取得します
+     * @return
+     */
+    public  TypeStatusAtomLiteBLE GetStatusAtomLiteBLE(){
+        return  this.mStatusAtomLiteBLE;
+    }
+    private static TypeStatusAtomLiteBLE mStatusAtomLiteBLE;
     private static BluetoothAdapter bluetoothAdapter;
     private static BluetoothLeScanner bleScanner;
     private static ScanCallback bscan;
     private static BluetoothGatt gatt;
     private static BluetoothGattCharacteristic characteristic;
-    private final long GATTSERVER_TIMEOUT=1000;
+    private static final long GATTSERVER_TIMEOUT=1000;
 
     //deperecatedのAPIを使った実装で使用（現状未使用）
     private static Handler handler = new Handler();
     private static LeDeviceListAdapter leDeviceListAdapter;
     private static boolean mScanning;
     // Device scan callback.
-    private static BluetoothAdapter.LeScanCallback leScanCallback =
+    private BluetoothAdapter.LeScanCallback leScanCallback =
             new BluetoothAdapter.LeScanCallback() {
                 @Override
                 public void onLeScan(final BluetoothDevice device, int rssi,
@@ -113,7 +133,7 @@ public class BleConnectionAtomLiteLight{
 
 
     //BLEデバイスが使えるかどうかチェック
-    public static IdentificationBLEStatus IdentificationBLE(Context cont) {
+    public IdentificationBLEStatus IdentificationBLE(Context cont) {
         IdentificationBLEStatus output= IdentificationBLEStatus.OK;
         try {
             // Use this check to determine whether BLE is supported on the device. Then
@@ -139,7 +159,7 @@ public class BleConnectionAtomLiteLight{
     // Stops scanning after 10 seconds.
     private static final long SCAN_PERIOD = 10000;
 
-    public static void ScanLeDevice(final boolean enable) {
+    public void ScanLeDevice(final boolean enable) {
         if (enable) {
             // Stops scanning after a pre-defined scan period.
             handler.postDelayed(new Runnable() {
@@ -164,7 +184,7 @@ public class BleConnectionAtomLiteLight{
      * こちらの関数が現状のAPIに対応している
      * @param parent
      */
-    public static void ScanLeDevice2(IBleHelper parent) {
+    public void ScanLeDevice2(IBleHelper parent) {
         if (bleScanner == null) {
             bleScanner = bluetoothAdapter.getBluetoothLeScanner();
             bscan = new BleScanCallback( parent);
@@ -177,7 +197,7 @@ public class BleConnectionAtomLiteLight{
      * Return a List of {@link android.bluetooth.le.ScanFilter} objects to filter by Service UUID.
      * @return
      */
-    private final static List<ScanFilter> buildScanFilters() {
+    private final List<ScanFilter> buildScanFilters() {
         List<ScanFilter> scanFilters = new ArrayList<>();
 
         ScanFilter.Builder builder = new ScanFilter.Builder();
@@ -190,7 +210,7 @@ public class BleConnectionAtomLiteLight{
      * Return a {@link android.bluetooth.le.ScanSettings} object set to use low power (to preserve battery life).
      * @return
      */
-    private final static ScanSettings buildScanSettings() {
+    private final ScanSettings buildScanSettings() {
         ScanSettings.Builder builder = new ScanSettings.Builder();
         builder.setScanMode(ScanSettings.SCAN_MODE_BALANCED);
         return builder.build();
@@ -201,7 +221,7 @@ public class BleConnectionAtomLiteLight{
      *
      * @param cont
      */
-    public final static void ScanStop(Context cont) {
+    public final void ScanStop(Context cont) {
         if (bleScanner != null) {
             if (bscan != null) {
                 bleScanner.stopScan(bscan);
@@ -218,7 +238,7 @@ public class BleConnectionAtomLiteLight{
      * @param parent
      * @return 真：正常、偽：異常発生
      */
-    public final static boolean ConnectStart(final Context context, final IBleHelper parent) {
+    public final boolean ConnectStart(final Context context, final IBleHelper parent) {
         boolean output=true;
         try {
             SettingDatabaseOpenHelper helper=new SettingDatabaseOpenHelper(context);
@@ -245,6 +265,25 @@ public class BleConnectionAtomLiteLight{
                                                             @Override
                                                             public void accept(Integer data) {
                                                                 parent.OnGetConnectionChangeNewStateAction(data);
+                                                                if (data== BluetoothProfile.STATE_CONNECTED) {//この条件分岐はAndroidのBLE接続ステートで分岐する
+                                                                    //TODO:再接続時に現状の電話ステート状態を送信するようにする
+                                                                    switch (mStatusAtomLiteBLE){//この分岐はAndroid側の電話ステートで分岐させる
+                                                                        case Called:
+                                                                            SendCalling(context);
+                                                                            break;
+                                                                        case Calling:
+                                                                            break;
+                                                                        case Reset:
+                                                                            break;
+                                                                        //
+                                                                        case Connected:
+                                                                        case DisConnected:
+                                                                            break;
+                                                                    }
+
+                                                                }else if(data== BluetoothProfile.STATE_DISCONNECTED){
+
+                                                                }
                                                             }
                                                         },
                                                         new Consumer<List<BluetoothGattCharacteristic>>() {
@@ -280,7 +319,7 @@ public class BleConnectionAtomLiteLight{
         return output;
     }
 
-    public final static void RequestPearing(Context context, final IBleHelper parent){
+    public final void RequestPearing(Context context, final IBleHelper parent){
         try {
             SettingDatabaseOpenHelper helper=new SettingDatabaseOpenHelper(context);
             String deviceName = helper.GetBleAddress();
@@ -324,19 +363,17 @@ public class BleConnectionAtomLiteLight{
         }
     }
 
-
-
     /**
      * BLE接続を終了します
      * @param context
      */
-    public final static void ConnectStop(Context context) {
+    public final void ConnectStop(Context context) {
         if(gatt!=null) {
+            mStatusAtomLiteBLE = TypeStatusAtomLiteBLE.DisConnected;
             gatt.close();
             Toast.makeText(context,context.getString(R.string.message_Gatt_Close), Toast.LENGTH_LONG).show();
         }else{
             Toast.makeText(context,context.getString(R.string.message_Gatt_disconnect), Toast.LENGTH_LONG).show();
-
         }
     }
 
@@ -344,9 +381,9 @@ public class BleConnectionAtomLiteLight{
      * 着信中をBluetoothのgattサーバーに送信します
      * @param context
      */
-
     public final void SendCalling(Context context){
-        this.writeCharacteristicTimeout(context,new byte[]{'a'});
+        mStatusAtomLiteBLE = TypeStatusAtomLiteBLE.Calling;
+        writeCharacteristicTimeout(context,new byte[]{'a'});
     }
 
 
@@ -355,6 +392,7 @@ public class BleConnectionAtomLiteLight{
      * @param context
      */
     public final void SendCalled(Context context) {
+        mStatusAtomLiteBLE = TypeStatusAtomLiteBLE.Called;
         this.writeCharacteristicTimeout(context,new byte[]{'b'});
     }
 
@@ -363,6 +401,7 @@ public class BleConnectionAtomLiteLight{
      * @param context
      */
     public final void SendAttention(Context context) {
+        mStatusAtomLiteBLE = TypeStatusAtomLiteBLE.Attention;
         this.writeCharacteristicTimeout(context,new byte[]{'c'});
     }
 
@@ -371,6 +410,7 @@ public class BleConnectionAtomLiteLight{
      * @param context
      */
     public final void SendConnect(Context context) {
+        mStatusAtomLiteBLE = TypeStatusAtomLiteBLE.Connected;
         this.writeCharacteristicTimeout(context,new byte[]{'d'});
     }
 

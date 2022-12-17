@@ -43,6 +43,8 @@ public class SecondFragment extends Fragment implements IBleHelper {
     private Handler handler = new Handler();
     private pairingBroadcastReceiverCallback receiver;
     private BluetoothGattCharacteristic characteristic;
+    private BleConnectionAtomLiteLight bleAtomLite;
+
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container,
@@ -55,8 +57,10 @@ public class SecondFragment extends Fragment implements IBleHelper {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         final IBleHelper parent=this;
+        this.bleAtomLite=new BleConnectionAtomLiteLight();
         textview = view.findViewById(R.id.textView_Bluetooth_Log);
         scrollView = view.findViewById(R.id.ScrollView);
+
         view.findViewById(R.id.button_second).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -67,55 +71,54 @@ public class SecondFragment extends Fragment implements IBleHelper {
         view.findViewById(R.id.button_BLE_Scan_Start).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                BleConnectionAtomLiteLight.ScanLeDevice2(parent);
+                bleAtomLite.ScanLeDevice2(parent);
             }
         });
 
         view.findViewById(R.id.button_BLE_Scan_Stop).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BleConnectionAtomLiteLight.ScanStop(v.getContext());
+                bleAtomLite.ScanStop(v.getContext());
             }
         });
         view.findViewById(R.id.button_BLE_Connect_Start).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BleConnectionAtomLiteLight.ConnectStart(v.getContext(),parent);
+                bleAtomLite.ConnectStart(v.getContext(),parent);
             }
         });
         view.findViewById(R.id.button_BLE_Connect_Stop).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BleConnectionAtomLiteLight.ConnectStop(v.getContext());
+                bleAtomLite.ConnectStop(v.getContext());
             }
         });
         view.findViewById(R.id.button_BLE_Pearling_Start).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BleConnectionAtomLiteLight.RequestPearing(v.getContext(),parent);
+                bleAtomLite.RequestPearing(v.getContext(),parent);
             }
         });
         view.findViewById(R.id.button_BLE_Calling).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new BleConnectionAtomLiteLight().SendCalling(v.getContext());
+                bleAtomLite.SendCalling(v.getContext());
             }
         });
         view.findViewById(R.id.button_BLE_Called).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new BleConnectionAtomLiteLight().SendCalled(v.getContext());
+                bleAtomLite.SendCalled(v.getContext());
             }
         });
         view.findViewById(R.id.button_BLE_Attention).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new BleConnectionAtomLiteLight().SendAttention(v.getContext());
+                bleAtomLite.SendAttention(v.getContext());
             }
         });
 
-
-        BleConnectionAtomLiteLight.IdentificationBLE(view.getContext());
+        this.bleAtomLite.IdentificationBLE(view.getContext());
         viewTextData = new StringBuilder();
 
         this.receiver=new pairingBroadcastReceiverCallback();
@@ -129,7 +132,7 @@ public class SecondFragment extends Fragment implements IBleHelper {
     @Override
     public void onResume() {
         super.onResume();
-        switch (BleConnectionAtomLiteLight.IdentificationBLE(this.getContext())){
+        switch (this.bleAtomLite.IdentificationBLE(this.getContext())){
             case BluetoothAdapterDisable:
                 Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                 startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
@@ -183,7 +186,7 @@ public class SecondFragment extends Fragment implements IBleHelper {
             public void run() {
                 Toast.makeText(mContext,
                         mContext.getString(R.string.message_Gatt_Connection_Status_Change)
-                                + BleConnectionAtomLiteLight.GetGattConnectionStatusToString(mContext,status),
+                                + bleAtomLite.GetGattConnectionStatusToString(mContext,status),
                         Toast.LENGTH_LONG).show();
             }
         });
