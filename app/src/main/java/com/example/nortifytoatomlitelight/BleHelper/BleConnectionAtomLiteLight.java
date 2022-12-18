@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.example.nortifytoatomlitelight.Database.SettingDatabaseOpenHelper;
 import com.example.nortifytoatomlitelight.LeDeviceListAdapter;
+import com.example.nortifytoatomlitelight.PhoneHelper.MyPhoneStateListener;
 import com.example.nortifytoatomlitelight.R;
 
 import java.util.ArrayList;
@@ -55,6 +56,36 @@ public class BleConnectionAtomLiteLight{
          */
         BluetoothNotSupported
     }
+    /**
+     * 接続先のAtomLiteの状態
+     */
+    public enum  TypeStatusAtomLiteBLE{
+        Connected,
+        DisConnected,
+        Calling,
+        Called,
+        Attention,
+        Reset,
+    }
+
+    /**
+     * 現状のAtomliteが検知する電話の状態
+     */
+    public enum TypeStatusAtomLiteTelephone{
+        /**
+         * 電話待ち受け中の状態
+         */
+        Idle,
+        /**
+         * 電話がかかっている状態
+         */
+        Calling,
+        /**
+         * 電話があった状態
+         */
+        Called,
+        Attention,
+    }
 
     /**
      * GattServerへの接続ステータスについてBluetoothProfileのIdを文字列に変換します
@@ -83,17 +114,6 @@ public class BleConnectionAtomLiteLight{
     }
 
 
-    /**
-     * 接続先のAtomLiteの状態
-     */
-    public enum  TypeStatusAtomLiteBLE{
-        Connected,
-        DisConnected,
-        Calling,
-        Called,
-        Attention,
-        Reset,
-    }
 
     /**
      * AtomLiteの状態を取得します
@@ -103,6 +123,11 @@ public class BleConnectionAtomLiteLight{
         return  this.mStatusAtomLiteBLE;
     }
     private static TypeStatusAtomLiteBLE mStatusAtomLiteBLE;
+    //TODO:このステータス状態保持用の変数が勝手にnullになる・・・
+    public  TypeStatusAtomLiteTelephone GetStatusAtomLiteTelephone(){
+        return mStatusAtomLiteTelephone;
+    }
+    private TypeStatusAtomLiteTelephone mStatusAtomLiteTelephone;
     private static BluetoothAdapter bluetoothAdapter;
     private static BluetoothLeScanner bleScanner;
     private static ScanCallback bscan;
@@ -267,17 +292,16 @@ public class BleConnectionAtomLiteLight{
                                                                 parent.OnGetConnectionChangeNewStateAction(data);
                                                                 if (data== BluetoothProfile.STATE_CONNECTED) {//この条件分岐はAndroidのBLE接続ステートで分岐する
                                                                     //TODO:再接続時に現状の電話ステート状態を送信するようにする
-                                                                    switch (mStatusAtomLiteBLE){//この分岐はAndroid側の電話ステートで分岐させる
+                                                                    switch (mStatusAtomLiteTelephone){//この分岐はAndroid側の電話ステートで分岐させる
                                                                         case Called:
-                                                                            SendCalling(context);
+                                                                            SendCalled(context);
                                                                             break;
                                                                         case Calling:
+                                                                            SendCalling(context);
                                                                             break;
-                                                                        case Reset:
-                                                                            break;
-                                                                        //
-                                                                        case Connected:
-                                                                        case DisConnected:
+                                                                        case Attention:
+                                                                            SendAttention(context);
+                                                                        case Idle:
                                                                             break;
                                                                     }
 
@@ -368,6 +392,7 @@ public class BleConnectionAtomLiteLight{
      * @param context
      */
     public final void ConnectStop(Context context) {
+        //mStatusAtomLiteTelephone= TypeStatusAtomLiteTelephone.Idle;
         if(gatt!=null) {
             mStatusAtomLiteBLE = TypeStatusAtomLiteBLE.DisConnected;
             gatt.close();
@@ -382,6 +407,7 @@ public class BleConnectionAtomLiteLight{
      * @param context
      */
     public final void SendCalling(Context context){
+        mStatusAtomLiteTelephone= TypeStatusAtomLiteTelephone.Calling;
         mStatusAtomLiteBLE = TypeStatusAtomLiteBLE.Calling;
         writeCharacteristicTimeout(context,new byte[]{'a'});
     }
@@ -392,6 +418,7 @@ public class BleConnectionAtomLiteLight{
      * @param context
      */
     public final void SendCalled(Context context) {
+        mStatusAtomLiteTelephone= TypeStatusAtomLiteTelephone.Called;
         mStatusAtomLiteBLE = TypeStatusAtomLiteBLE.Called;
         this.writeCharacteristicTimeout(context,new byte[]{'b'});
     }
@@ -410,6 +437,7 @@ public class BleConnectionAtomLiteLight{
      * @param context
      */
     public final void SendConnect(Context context) {
+        //mStatusAtomLiteTelephone= TypeStatusAtomLiteTelephone.Idle;
         mStatusAtomLiteBLE = TypeStatusAtomLiteBLE.Connected;
         this.writeCharacteristicTimeout(context,new byte[]{'d'});
     }

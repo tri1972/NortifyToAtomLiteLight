@@ -25,7 +25,7 @@ public class MyPhoneStateListener extends PhoneStateListener implements IBleHelp
     /**
      * onCallStateChangedが前に実行されたときの電話状態
      */
-    private int beforeState;
+    public static int beforeState;
 
     public MyPhoneStateListener(Context context){
         this.mContext=context;
