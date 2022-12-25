@@ -1,5 +1,7 @@
 package com.example.nortifytoatomlitelight.BleHelper.StatePhoneAtomLite;
 
+import android.bluetooth.BluetoothGatt;
+import android.bluetooth.BluetoothGattCharacteristic;
 import android.content.Context;
 
 public class ContextPhoneStateListener {
@@ -12,8 +14,8 @@ public class ContextPhoneStateListener {
         return this.helper;
     }
 
-    public ContextPhoneStateListener(Context context){
-        helper=new  StatePhoneAtomLiteLightHelper(context);
+    public ContextPhoneStateListener(BluetoothGatt gatt,BluetoothGattCharacteristic characteristic){
+        helper=new StatePhoneAtomLiteLightHelper(gatt,characteristic);
     }
 
     public void setState(IStatePhoneInAtomLite state) {
@@ -21,10 +23,11 @@ public class ContextPhoneStateListener {
     }
 
     public void SendAtomLite() {
-        state.SendAtomLite(this);
+        state.SetStatePhoneAtomLiteLightHelper(this.helper);
+        state.SendAtomLite();
     }
 
-    public void ChangeState(ContextPhoneStateListener context, int condition) {
-        state.ChangeState(context,condition);
+    public void ChangeState(int condition) {
+        state.ChangeState(condition);
     }
 }

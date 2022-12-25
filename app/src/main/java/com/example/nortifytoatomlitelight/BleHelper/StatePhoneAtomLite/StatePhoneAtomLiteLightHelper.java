@@ -5,7 +5,6 @@ import android.bluetooth.BluetoothGattCharacteristic;
 import android.content.Context;
 import android.widget.Toast;
 
-import com.example.nortifytoatomlitelight.BleHelper.BleConnectionAtomLiteLight;
 import com.example.nortifytoatomlitelight.R;
 
 import java.util.concurrent.CompletableFuture;
@@ -18,15 +17,17 @@ import java.util.function.Supplier;
 public class StatePhoneAtomLiteLightHelper {
 
     private static final long GATTSERVER_TIMEOUT=1000;
-    private static BluetoothGattCharacteristic characteristic;
-    private static BluetoothGatt gatt;
-    private Context context;
+    private BluetoothGattCharacteristic mCharacteristic;
+    private BluetoothGatt mGatt;
 
     /**
-     * コンストラクタ
+     *  コンストラクタ
+     * @param gatt
+     * @param mCharacteristic
      */
-    public StatePhoneAtomLiteLightHelper(Context context){
-        this.context=context;
+    public StatePhoneAtomLiteLightHelper(BluetoothGatt gatt,BluetoothGattCharacteristic mCharacteristic){
+        this.mGatt=gatt;
+        this.mCharacteristic = mCharacteristic;
     }
 
     /**
@@ -36,7 +37,6 @@ public class StatePhoneAtomLiteLightHelper {
     public void writeCharacteristicTimeout(final byte [] bytes){
 
         Supplier<Integer> exec=new Supplier<Integer>(){
-            private Context mCon=context;
             private byte [] mBytes=bytes;
 
             /**
@@ -46,7 +46,7 @@ public class StatePhoneAtomLiteLightHelper {
             @Override
             public Integer get() {
                 try {
-                    writeBytesCharacteristic(this.mBytes,mCon);
+                    writeBytesCharacteristic(this.mBytes);
                     //Thread.sleep(200000);
                 } catch (Exception ex) {
                     ex.printStackTrace();
@@ -60,7 +60,7 @@ public class StatePhoneAtomLiteLightHelper {
         try {
             future.get(GATTSERVER_TIMEOUT, TimeUnit.MILLISECONDS);
         } catch (InterruptedException | ExecutionException | TimeoutException ex) {
-            Toast.makeText(context,context.getString(R.string.message_Gatt_Passive_Timeout),Toast.LENGTH_LONG).show();
+            //TODO:タイムアウトエラー処理を記述する
         }
 
     }
@@ -68,14 +68,17 @@ public class StatePhoneAtomLiteLightHelper {
     /**
      * GattサーバーのCharacteristicにデータを書き込みます
      * @param bytes
-     * @param mCon
      */
-    private void writeBytesCharacteristic(byte[] bytes,Context mCon){
-        if(characteristic!=null) {
-            characteristic.setValue(bytes);
-            gatt.writeCharacteristic(characteristic);
+    private void writeBytesCharacteristic(byte[] bytes){
+        if(this.mGatt!=null) {
+            if (mCharacteristic != null) {
+                mCharacteristic.setValue(bytes);
+                this.mGatt.writeCharacteristic(mCharacteristic);
+            } else {
+                //TODO:Characteristic取得エラー処理を記述する
+            }
         }else{
-            Toast.makeText(mCon,mCon.getString(R.string.message_Gatt_disconnect), Toast.LENGTH_LONG).show();
+            //TODO:GattServer取得エラー処理を記述する
         }
     }
 }

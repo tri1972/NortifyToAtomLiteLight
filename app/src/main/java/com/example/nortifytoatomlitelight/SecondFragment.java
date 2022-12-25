@@ -20,6 +20,10 @@ import android.widget.Toast;
 
 import com.example.nortifytoatomlitelight.BleHelper.BleConnectionAtomLiteLight;
 import com.example.nortifytoatomlitelight.BleHelper.IBleHelper;
+import com.example.nortifytoatomlitelight.BleHelper.StatePhoneAtomLite.ContextPhoneStateListener;
+import com.example.nortifytoatomlitelight.BleHelper.StatePhoneAtomLite.PhoneStateAttention;
+import com.example.nortifytoatomlitelight.BleHelper.StatePhoneAtomLite.PhoneStateCalled;
+import com.example.nortifytoatomlitelight.BleHelper.StatePhoneAtomLite.PhoneStateCalling;
 import com.example.nortifytoatomlitelight.BleHelper.pairingBroadcastReceiverCallback;
 
 import java.security.spec.ECField;
@@ -44,6 +48,7 @@ public class SecondFragment extends Fragment implements IBleHelper {
     private pairingBroadcastReceiverCallback receiver;
     private BluetoothGattCharacteristic characteristic;
     private BleConnectionAtomLiteLight bleAtomLite;
+    private ContextPhoneStateListener mContextPhoneStateListener;
 
     @Override
     public View onCreateView(
@@ -60,6 +65,12 @@ public class SecondFragment extends Fragment implements IBleHelper {
         this.bleAtomLite=new BleConnectionAtomLiteLight();
         textview = view.findViewById(R.id.textView_Bluetooth_Log);
         scrollView = view.findViewById(R.id.ScrollView);
+        this.mContextPhoneStateListener
+                =new ContextPhoneStateListener
+                (
+                        BleConnectionAtomLiteLight.GetGattServer(),
+                        BleConnectionAtomLiteLight.GetBluetoothGattCharacteristic()
+                );
 
         view.findViewById(R.id.button_second).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -102,19 +113,25 @@ public class SecondFragment extends Fragment implements IBleHelper {
         view.findViewById(R.id.button_BLE_Calling).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                bleAtomLite.SendCalling(v.getContext());
+                mContextPhoneStateListener.setState(PhoneStateCalling.getInstance());
+                mContextPhoneStateListener.SendAtomLite();
+                //bleAtomLite.SendCalling(v.getContext());
             }
         });
         view.findViewById(R.id.button_BLE_Called).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                bleAtomLite.SendCalled(v.getContext());
+                mContextPhoneStateListener.setState(PhoneStateCalled.getInstance());
+                mContextPhoneStateListener.SendAtomLite();
+                //bleAtomLite.SendCalled(v.getContext());
             }
         });
         view.findViewById(R.id.button_BLE_Attention).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                bleAtomLite.SendAttention(v.getContext());
+                mContextPhoneStateListener.setState(PhoneStateAttention.getInstance());
+                mContextPhoneStateListener.SendAtomLite();
+                //bleAtomLite.SendAttention(v.getContext());
             }
         });
 

@@ -4,6 +4,7 @@ import com.example.nortifytoatomlitelight.BleHelper.BleConnectionAtomLiteLight;
 public class BleGattServerStateConnect  implements IStatePhoneInAtomLite{
 
     private static BleGattServerStateConnect instance=new BleGattServerStateConnect();
+    private StatePhoneAtomLiteLightHelper mhelper;
 
     private BleGattServerStateConnect (){
 
@@ -13,12 +14,17 @@ public class BleGattServerStateConnect  implements IStatePhoneInAtomLite{
         return instance;
     }
     @Override
-    public void SendAtomLite(ContextPhoneStateListener context) {
-        context.GetHelper().writeCharacteristicTimeout(new byte[]{'d'});
+    public void SendAtomLite() {
+        mhelper.writeCharacteristicTimeout(new byte[]{'d'});
     }
 
     @Override
-    public void ChangeState(ContextPhoneStateListener context, int condition) {
+    public void ChangeState(int condition) {
 
+    }
+
+    @Override
+    public void SetStatePhoneAtomLiteLightHelper(StatePhoneAtomLiteLightHelper helper) {
+        this.mhelper=helper;
     }
 }

@@ -4,6 +4,8 @@ public class PhoneStateAttention implements IStatePhoneInAtomLite  {
 
     private static PhoneStateAttention instance=new PhoneStateAttention();
 
+    private StatePhoneAtomLiteLightHelper mhelper;
+
     private PhoneStateAttention(){
 
     }
@@ -13,13 +15,18 @@ public class PhoneStateAttention implements IStatePhoneInAtomLite  {
     }
 
     @Override
-    public void SendAtomLite(ContextPhoneStateListener context) {
-        context.GetHelper().writeCharacteristicTimeout(new byte[]{'c'});
+    public void SendAtomLite() {
+        this.mhelper.writeCharacteristicTimeout(new byte[]{'c'});
     }
 
     //TODO:このクラスのように電話ステートからのBLE送信について、他のステートでも実行していく
     @Override
-    public void ChangeState(ContextPhoneStateListener context, int condition) {
+    public void ChangeState( int condition) {
 
+    }
+
+    @Override
+    public void SetStatePhoneAtomLiteLightHelper(StatePhoneAtomLiteLightHelper helper) {
+        this.mhelper=helper;
     }
 }

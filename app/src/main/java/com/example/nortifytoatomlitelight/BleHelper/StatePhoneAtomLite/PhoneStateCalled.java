@@ -3,7 +3,7 @@ package com.example.nortifytoatomlitelight.BleHelper.StatePhoneAtomLite;
 public class PhoneStateCalled implements IStatePhoneInAtomLite{
 
     private static PhoneStateCalled instance=new PhoneStateCalled();
-
+    private StatePhoneAtomLiteLightHelper mhelper;
     private PhoneStateCalled(){
 
     }
@@ -13,14 +13,19 @@ public class PhoneStateCalled implements IStatePhoneInAtomLite{
     }
 
     @Override
-    public void SendAtomLite(ContextPhoneStateListener context) {
-        context.GetHelper().writeCharacteristicTimeout(new byte[]{'b'});
+    public void SendAtomLite() {
+        this.mhelper.writeCharacteristicTimeout(new byte[]{'b'});
     }
 
     //TODO:このクラスのように電話ステートからのBLE送信について、他のステートでも実行していく
     @Override
-    public void ChangeState(ContextPhoneStateListener context, int condition) {
+    public void ChangeState(int condition) {
 
+    }
+
+    @Override
+    public void SetStatePhoneAtomLiteLightHelper(StatePhoneAtomLiteLightHelper helper) {
+        this.mhelper=helper;
     }
 
 }

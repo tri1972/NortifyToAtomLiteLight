@@ -43,7 +43,12 @@ public class MyPhoneStateListener extends PhoneStateListener implements IBleHelp
     private final String TAG = getClass().getSimpleName();
     //TODO:電話番号の取得が実機ではできない
     public void onCallStateChanged(int state, String callNumber) {
-        this.mContextPhoneStateListener=new ContextPhoneStateListener(mContext);
+        this.mContextPhoneStateListener
+                =new ContextPhoneStateListener
+                (
+                        BleConnectionAtomLiteLight.GetGattServer(),
+                        BleConnectionAtomLiteLight.GetBluetoothGattCharacteristic()
+                );
         Log.d(TAG, ":" + state+"-PhoneNumber:"+callNumber);
         switch(state){
             case TelephonyManager.CALL_STATE_IDLE:      //待ち受け（終了時）

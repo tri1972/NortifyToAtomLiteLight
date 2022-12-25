@@ -10,11 +10,8 @@ import android.bluetooth.BluetoothProfile;
 import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanFilter;
-import android.bluetooth.le.ScanResult;
 import android.bluetooth.le.ScanSettings;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Handler;
 import android.util.Log;
@@ -22,7 +19,6 @@ import android.widget.Toast;
 
 import com.example.nortifytoatomlitelight.Database.SettingDatabaseOpenHelper;
 import com.example.nortifytoatomlitelight.LeDeviceListAdapter;
-import com.example.nortifytoatomlitelight.PhoneHelper.MyPhoneStateListener;
 import com.example.nortifytoatomlitelight.R;
 
 import java.util.ArrayList;
@@ -35,10 +31,6 @@ import java.util.concurrent.TimeoutException;
 import java.util.function.Supplier;
 
 import androidx.core.util.Consumer;
-
-import static android.bluetooth.BluetoothAdapter.checkBluetoothAddress;
-import static androidx.constraintlayout.motion.utils.Oscillator.TAG;
-import static androidx.core.app.ActivityCompat.startActivityForResult;
 
 public class BleConnectionAtomLiteLight{
 
@@ -114,6 +106,7 @@ public class BleConnectionAtomLiteLight{
     }
 
 
+    private static final String TAG = "BleConnectionAtomLiteLight";
 
     /**
      * AtomLiteの状態を取得します
@@ -131,8 +124,25 @@ public class BleConnectionAtomLiteLight{
     private static BluetoothAdapter bluetoothAdapter;
     private static BluetoothLeScanner bleScanner;
     private static ScanCallback bscan;
-    private static BluetoothGatt gatt;
-    private static BluetoothGattCharacteristic characteristic;
+
+    /**
+     * Characteristicの取得
+     * @return
+     */
+    public  static BluetoothGattCharacteristic GetBluetoothGattCharacteristic(){
+        return mCharacteristic;
+    }
+    private static BluetoothGattCharacteristic mCharacteristic;
+
+    /**
+     * GattServerオブジェクトの取得
+     * @return
+     */
+    public static BluetoothGatt GetGattServer(){
+        return mGatt;
+    }
+    private static BluetoothGatt mGatt;
+
     private static final long GATTSERVER_TIMEOUT=1000;
 
     //deperecatedのAPIを使った実装で使用（現状未使用）
@@ -282,7 +292,7 @@ public class BleConnectionAtomLiteLight{
                             String deviceName = device.getName();
                             //String deviceHardwareAddress = device.getAddress(); // MAC address
                             if (deviceName.equals(storeDeviceName)) {
-                                gatt = device.connectGatt
+                                mGatt = device.connectGatt
                                         (context,
                                                 true,
                                                 new BleGattCallback(
@@ -290,30 +300,34 @@ public class BleConnectionAtomLiteLight{
                                                             @Override
                                                             public void accept(Integer data) {
                                                                 parent.OnGetConnectionChangeNewStateAction(data);
-                                                                if (data== BluetoothProfile.STATE_CONNECTED) {//この条件分岐はAndroidのBLE接続ステートで分岐する
-                                                                    //TODO:再接続時に現状の電話ステート状態を送信するようにする
-                                                                    switch (mStatusAtomLiteTelephone){//この分岐はAndroid側の電話ステートで分岐させる
-                                                                        case Called:
-                                                                            SendCalled(context);
-                                                                            break;
-                                                                        case Calling:
-                                                                            SendCalling(context);
-                                                                            break;
-                                                                        case Attention:
-                                                                            SendAttention(context);
-                                                                        case Idle:
-                                                                            break;
+                                                                try {
+                                                                    if (data == BluetoothProfile.STATE_CONNECTED) {//この条件分岐はAndroidのBLE接続ステートで分岐する
+                                                                        //TODO:再接続時に現状の電話ステート状態を送信するようにする
+                                                                        switch (mStatusAtomLiteTelephone) {//mStatusAtomLiteTelephoneがnullになることに注意！！！
+                                                                            case Called:
+                                                                                SendCalled(context);
+                                                                                break;
+                                                                            case Calling:
+                                                                                SendCalling(context);
+                                                                                break;
+                                                                            case Attention:
+                                                                                SendAttention(context);
+                                                                            case Idle:
+                                                                                break;
+                                                                        }
+
+                                                                    } else if (data == BluetoothProfile.STATE_DISCONNECTED) {
+
                                                                     }
-
-                                                                }else if(data== BluetoothProfile.STATE_DISCONNECTED){
-
+                                                                }catch(NullPointerException err){
+                                                                    Log.e(TAG,"nullエラー発生");
                                                                 }
                                                             }
                                                         },
                                                         new Consumer<List<BluetoothGattCharacteristic>>() {
                                                             @Override
                                                             public void accept(List<BluetoothGattCharacteristic> data) {
-                                                                characteristic = data.get(0);
+                                                                mCharacteristic = data.get(0);
                                                                 parent.OnGetCharacteristic(data);
                                                             }
                                                         },
@@ -328,7 +342,7 @@ public class BleConnectionAtomLiteLight{
                             }
                         }
                     }
-                    characteristic = parent.GetCharacteristic();
+                    mCharacteristic = parent.GetCharacteristic();
                 } else {
                     output=false;
                     Toast.makeText(context, context.getString(R.string.status_Bluetooth_Not_Use_Bluetooth_Device), Toast.LENGTH_LONG).show();
@@ -353,7 +367,7 @@ public class BleConnectionAtomLiteLight{
             for(BluetoothDevice device :pairedDevices){
                 if(device.getName().equals(deviceName)){
                     device.createBond();
-                    gatt = device.connectGatt
+                    mGatt = device.connectGatt
                             (context,
                                     true,
                                     new BleGattCallback(
@@ -366,7 +380,7 @@ public class BleConnectionAtomLiteLight{
                                             new Consumer<List<BluetoothGattCharacteristic>>() {
                                                 @Override
                                                 public void accept(List<BluetoothGattCharacteristic> data) {
-                                                    characteristic=data.get(0);
+                                                    mCharacteristic =data.get(0);
                                                     parent.OnGetCharacteristic(data);
                                                 }
                                             },
@@ -381,7 +395,7 @@ public class BleConnectionAtomLiteLight{
                     break;
                 }
             }
-            characteristic=parent.GetCharacteristic();
+            mCharacteristic =parent.GetCharacteristic();
         }catch (Exception err){
             throw err;
         }
@@ -393,9 +407,9 @@ public class BleConnectionAtomLiteLight{
      */
     public final void ConnectStop(Context context) {
         //mStatusAtomLiteTelephone= TypeStatusAtomLiteTelephone.Idle;
-        if(gatt!=null) {
+        if(mGatt !=null) {
             mStatusAtomLiteBLE = TypeStatusAtomLiteBLE.DisConnected;
-            gatt.close();
+            mGatt.close();
             Toast.makeText(context,context.getString(R.string.message_Gatt_Close), Toast.LENGTH_LONG).show();
         }else{
             Toast.makeText(context,context.getString(R.string.message_Gatt_disconnect), Toast.LENGTH_LONG).show();
@@ -505,9 +519,9 @@ public class BleConnectionAtomLiteLight{
      */
     private void writeBytesCharacteristic(byte[] bytes,Context mCon){
 
-        if(characteristic!=null) {
-            characteristic.setValue(bytes);
-            gatt.writeCharacteristic(characteristic);
+        if(mCharacteristic !=null) {
+            mCharacteristic.setValue(bytes);
+            mGatt.writeCharacteristic(mCharacteristic);
         }else{
             Toast.makeText(mCon,mCon.getString(R.string.message_Gatt_disconnect), Toast.LENGTH_LONG).show();
         }
