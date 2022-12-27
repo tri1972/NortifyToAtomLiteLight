@@ -6,8 +6,9 @@ import android.content.Context;
 
 public class ContextPhoneStateListener {
 
-    private  IStatePhoneInAtomLite state;
+    private IStatePhoneInAtomLite state;
 
+    private IStatePhoneInAtomLite beforeState;
 
     private StatePhoneAtomLiteLightHelper helper;
     public StatePhoneAtomLiteLightHelper GetHelper(){
@@ -16,6 +17,7 @@ public class ContextPhoneStateListener {
 
     public ContextPhoneStateListener(BluetoothGatt gatt,BluetoothGattCharacteristic characteristic){
         helper=new StatePhoneAtomLiteLightHelper(gatt,characteristic);
+        beforeState=PhoneStateIdle.getInstance();
     }
 
     public void setState(IStatePhoneInAtomLite state) {
@@ -27,7 +29,17 @@ public class ContextPhoneStateListener {
         state.SendAtomLite();
     }
 
-    public void ChangeState(int condition) {
-        state.ChangeState(condition);
+    public void ChangeState(IStatePhoneInAtomLite state) {
+        try {
+            this.state = state;
+            if (!state.getClass().getName().equals(beforeState.getClass().getName())) {
+                this.state = state.ChangeState(beforeState);
+                this.beforeState=this.state;
+            } else {
+                ;
+            }
+        }catch (Exception e){
+            throw e;
+        }
     }
 }

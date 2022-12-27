@@ -19,8 +19,8 @@ public class BleGattServerStateConnect  implements IStatePhoneInAtomLite{
     }
 
     @Override
-    public void ChangeState(int condition) {
-
+    public IStatePhoneInAtomLite ChangeState(IStatePhoneInAtomLite beforeState) {
+        return null;
     }
 
     @Override

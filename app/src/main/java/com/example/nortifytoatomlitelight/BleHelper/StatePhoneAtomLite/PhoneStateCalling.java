@@ -19,8 +19,8 @@ public class PhoneStateCalling implements IStatePhoneInAtomLite {
 
     //TODO:このクラスのように電話ステートからのBLE送信について、他のステートでも実行していく
     @Override
-    public void ChangeState(int condition) {
-
+    public IStatePhoneInAtomLite ChangeState(IStatePhoneInAtomLite beforeState) {
+        return getInstance();
     }
 
     @Override
