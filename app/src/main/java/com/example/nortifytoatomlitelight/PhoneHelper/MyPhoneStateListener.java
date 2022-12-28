@@ -59,19 +59,11 @@ public class MyPhoneStateListener extends PhoneStateListener implements IBleHelp
                 helper.insertData("CALL_STATE_IDLE","",false,callNumber,DEVICE_TYPE);
                 this.mContextPhoneStateListener.ChangeState(PhoneStateIdle.getInstance());
                 this.mContextPhoneStateListener.SendAtomLite();
-                /*
-                if(this.beforeState==TelephonyManager.CALL_STATE_RINGING){
-                    new BleConnectionAtomLiteLight().SendCalled(mContext);
-                }else if(this.beforeState==TelephonyManager.CALL_STATE_OFFHOOK) {
-                    new BleConnectionAtomLiteLight().SendConnect(mContext);
-                }
-                */
                 beforeState=TelephonyManager.CALL_STATE_IDLE;
                 break;
             case TelephonyManager.CALL_STATE_RINGING:   //着信
                 this.mContextPhoneStateListener.ChangeState(PhoneStateCalling.getInstance());
                 this.mContextPhoneStateListener.SendAtomLite();
-                //new BleConnectionAtomLiteLight().SendCalling(mContext);
                 Toast.makeText(mContext, "CALL_STATE_RINGING: " + callNumber, Toast.LENGTH_LONG).show();
                 helper.insertData("ALL_STATE_RINGING",callNumber,false,callNumber,DEVICE_TYPE);
                 beforeState=TelephonyManager.CALL_STATE_RINGING;
@@ -79,7 +71,6 @@ public class MyPhoneStateListener extends PhoneStateListener implements IBleHelp
             case TelephonyManager.CALL_STATE_OFFHOOK:   //通話
                 this.mContextPhoneStateListener.ChangeState(PhoneStateAttention.getInstance());
                 this.mContextPhoneStateListener.SendAtomLite();
-                //new BleConnectionAtomLiteLight().SendAttention(mContext);
                 Toast.makeText(mContext, "CALL_STATE_OFFHOOK", Toast.LENGTH_LONG).show();
                 helper.insertData("CALL_STATE_OFFHOOK","",false,callNumber,DEVICE_TYPE);
                 beforeState=TelephonyManager.CALL_STATE_OFFHOOK;

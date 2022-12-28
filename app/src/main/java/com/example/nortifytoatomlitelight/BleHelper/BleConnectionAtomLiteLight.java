@@ -292,53 +292,59 @@ public class BleConnectionAtomLiteLight{
                             String deviceName = device.getName();
                             //String deviceHardwareAddress = device.getAddress(); // MAC address
                             if (deviceName.equals(storeDeviceName)) {
-                                mGatt = device.connectGatt
-                                        (context,
-                                                true,
-                                                new BleGattCallback(
-                                                        new Consumer<Integer>() {
-                                                            @Override
-                                                            public void accept(Integer data) {
-                                                                parent.OnGetConnectionChangeNewStateAction(data);
-                                                                try {
-                                                                    if (data == BluetoothProfile.STATE_CONNECTED) {//この条件分岐はAndroidのBLE接続ステートで分岐する
-                                                                        //TODO:再接続時に現状の電話ステート状態を送信するようにする
-                                                                        switch (mStatusAtomLiteTelephone) {//mStatusAtomLiteTelephoneがnullになることに注意！！！
-                                                                            case Called:
-                                                                                SendCalled(context);
-                                                                                break;
-                                                                            case Calling:
-                                                                                SendCalling(context);
-                                                                                break;
-                                                                            case Attention:
-                                                                                SendAttention(context);
-                                                                            case Idle:
-                                                                                break;
+                                try {
+                                    //TODO:ペアリングした時のUUIDが実際にはなかった場合（別のデバイスに変更してUUIDが異なったりした場合、接続できなくなるのを防ぎたい。
+                                    mGatt = device.connectGatt
+                                            (context,
+                                                    true,
+                                                    new BleGattCallback(
+                                                            new Consumer<Integer>() {
+                                                                @Override
+                                                                public void accept(Integer data) {
+                                                                    parent.OnGetConnectionChangeNewStateAction(data);
+                                                                    try {
+                                                                        if (data == BluetoothProfile.STATE_CONNECTED) {//この条件分岐はAndroidのBLE接続ステートで分岐する
+                                                                            //TODO:再接続時に現状の電話ステート状態を送信するようにする
+                                                                            switch (mStatusAtomLiteTelephone) {//mStatusAtomLiteTelephoneがnullになることに注意！！！
+                                                                                case Called:
+                                                                                    SendCalled(context);
+                                                                                    break;
+                                                                                case Calling:
+                                                                                    SendCalling(context);
+                                                                                    break;
+                                                                                case Attention:
+                                                                                    SendAttention(context);
+                                                                                case Idle:
+                                                                                    break;
+                                                                            }
+
+                                                                        } else if (data == BluetoothProfile.STATE_DISCONNECTED) {
+
                                                                         }
-
-                                                                    } else if (data == BluetoothProfile.STATE_DISCONNECTED) {
-
+                                                                    } catch (NullPointerException err) {
+                                                                        Log.e(TAG, "nullエラー発生");
                                                                     }
-                                                                }catch(NullPointerException err){
-                                                                    Log.e(TAG,"nullエラー発生");
+                                                                }
+                                                            },
+                                                            new Consumer<List<BluetoothGattCharacteristic>>() {
+                                                                @Override
+                                                                public void accept(List<BluetoothGattCharacteristic> data) {
+                                                                    mCharacteristic = data.get(0);
+                                                                    parent.OnGetCharacteristic(data);
+                                                                }
+                                                            },
+                                                            new Consumer<List<BluetoothGattService>>() {
+                                                                @Override
+                                                                public void accept(List<BluetoothGattService> data) {
+                                                                    parent.OnGetService(data);
                                                                 }
                                                             }
-                                                        },
-                                                        new Consumer<List<BluetoothGattCharacteristic>>() {
-                                                            @Override
-                                                            public void accept(List<BluetoothGattCharacteristic> data) {
-                                                                mCharacteristic = data.get(0);
-                                                                parent.OnGetCharacteristic(data);
-                                                            }
-                                                        },
-                                                        new Consumer<List<BluetoothGattService>>() {
-                                                            @Override
-                                                            public void accept(List<BluetoothGattService> data) {
-                                                                parent.OnGetService(data);
-                                                            }
-                                                        }
-                                                ),
-                                                BluetoothDevice.TRANSPORT_LE);
+                                                    ),
+                                                    BluetoothDevice.TRANSPORT_LE
+                                            );
+                                }catch(Exception err){
+                                    Log.e(TAG, "nullエラー発生");
+                                }
                             }
                         }
                     }

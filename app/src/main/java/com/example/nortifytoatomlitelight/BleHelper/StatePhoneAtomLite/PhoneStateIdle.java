@@ -32,8 +32,11 @@ public class PhoneStateIdle implements IStatePhoneInAtomLite  {
             return BleGattServerStateConnect.getInstance();
         }else if(beforeState instanceof PhoneStateAttention){
             return PhoneStateAttention.getInstance();
+        }else if(beforeState instanceof PhoneStateCalled){
+            return PhoneStateCalled.getInstance();
+        }else{
+            return null;
         }
-        return null;
     }
 
     @Override

@@ -3,9 +3,11 @@ package com.example.nortifytoatomlitelight.BleHelper.StatePhoneAtomLite;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.content.Context;
+import android.util.Log;
 
 public class ContextPhoneStateListener {
 
+    private final String TAG=this.getClass().getName();
     private IStatePhoneInAtomLite state;
 
     private IStatePhoneInAtomLite beforeState;
@@ -15,11 +17,20 @@ public class ContextPhoneStateListener {
         return this.helper;
     }
 
+    /**
+     * コンストラクタ
+     * @param gatt
+     * @param characteristic
+     */
     public ContextPhoneStateListener(BluetoothGatt gatt,BluetoothGattCharacteristic characteristic){
         helper=new StatePhoneAtomLiteLightHelper(gatt,characteristic);
         beforeState=PhoneStateIdle.getInstance();
     }
 
+    /**
+     * stateを設定する
+     * @param state
+     */
     public void setState(IStatePhoneInAtomLite state) {
         this.state = state;
     }
@@ -30,16 +41,16 @@ public class ContextPhoneStateListener {
     }
 
     public void ChangeState(IStatePhoneInAtomLite state) {
-        try {
-            this.state = state;
-            if (!state.getClass().getName().equals(beforeState.getClass().getName())) {
+        this.state = state;
+        if (!state.getClass().getName().equals(beforeState.getClass().getName())) {
+            if(state.ChangeState(beforeState)!=null) {
                 this.state = state.ChangeState(beforeState);
-                this.beforeState=this.state;
-            } else {
-                ;
+                this.beforeState = this.state;
+            }else{
+                throw new NullPointerException(TAG+":state is null");
             }
-        }catch (Exception e){
-            throw e;
+        } else {
+            ;
         }
     }
 }

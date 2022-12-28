@@ -21,6 +21,7 @@ public class PhoneCallReceiver extends BroadcastReceiver {
 
     private Context ctx;
 
+    private MyPhoneStateListener mPhoneListener;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -30,8 +31,10 @@ public class PhoneCallReceiver extends BroadcastReceiver {
             //TelephonyManagerの生成
             TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
             //リスナーの登録
-            MyPhoneStateListener PhoneListener = new MyPhoneStateListener(context);
-            tm.listen(PhoneListener, PhoneStateListener.LISTEN_CALL_STATE);
+            if(this.mPhoneListener==null) {
+                this.mPhoneListener = new MyPhoneStateListener(context);
+            }
+            tm.listen(this.mPhoneListener, PhoneStateListener.LISTEN_CALL_STATE);
 
         } catch (Exception e) {
             Log.e(TAG, ":" + e);
